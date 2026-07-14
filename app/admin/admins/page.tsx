@@ -32,19 +32,26 @@ export default function AdminsPage() {
       return;
     }
 
-    const { error } = await supabase
-      .from("admins")
-      .insert({
+    const response = await fetch("/api/admins/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
         name,
         email,
         role,
-        active: true,
-      });
+      }),
+    });
 
-    if (error) {
-      alert(error.message);
+    const result = await response.json();
+
+    if (!response.ok) {
+      alert(result.error);
       return;
     }
+
+    alert("Admin created successfully");
 
     setName("");
     setEmail("");
@@ -95,7 +102,6 @@ export default function AdminsPage() {
           Admin Management
         </h1>
 
-        {/* Create Admin */}
         <div className="bg-white rounded-3xl shadow p-8 mb-8">
 
           <h2 className="text-2xl font-black text-gray-900 mb-5">
@@ -139,7 +145,6 @@ export default function AdminsPage() {
         </div>
 
 
-        {/* Admin List */}
         <div className="bg-white rounded-3xl shadow p-8">
 
           {admins.length === 0 ? (
