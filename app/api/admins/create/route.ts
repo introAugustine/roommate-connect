@@ -5,11 +5,11 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const { name, email, role } = body;
+    const { name, email, password, role } = body;
 
-    if (!name || !email) {
+    if (!name || !email || !password) {
       return NextResponse.json(
-        { error: "Name and email are required" },
+        { error: "Name, email and password are required" },
         { status: 400 }
       );
     }
@@ -22,6 +22,7 @@ export async function POST(request: Request) {
     const { data: authUser, error: authError } =
       await supabaseAdmin.auth.admin.createUser({
         email,
+        password,
         email_confirm: true,
       });
 

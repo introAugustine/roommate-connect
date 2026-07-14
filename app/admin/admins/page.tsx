@@ -9,6 +9,7 @@ export default function AdminsPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState("ADMIN");
 
   async function getAdmins() {
@@ -29,8 +30,8 @@ export default function AdminsPage() {
   async function createAdmin() {
     alert("Button clicked");
 
-    if (!name || !email) {
-      alert("Please fill in name and email");
+    if (!name || !email || !password) {
+      alert("Please fill in name, email and password");
       return;
     }
 
@@ -43,6 +44,7 @@ export default function AdminsPage() {
         body: JSON.stringify({
           name,
           email,
+          password,
           role,
         }),
       });
@@ -58,6 +60,7 @@ export default function AdminsPage() {
 
       setName("");
       setEmail("");
+      setPassword("");
       setRole("ADMIN");
 
       getAdmins();
@@ -115,7 +118,7 @@ export default function AdminsPage() {
             Create New Admin
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-4 gap-4">
 
             <input
               value={name}
@@ -128,6 +131,14 @@ export default function AdminsPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Admin email"
+              className="border-2 border-gray-300 rounded-xl p-3 text-gray-900"
+            />
+
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Admin password"
               className="border-2 border-gray-300 rounded-xl p-3 text-gray-900"
             />
 
@@ -150,7 +161,6 @@ export default function AdminsPage() {
           </button>
 
         </div>
-
 
         <div className="bg-white rounded-3xl shadow p-8">
 
