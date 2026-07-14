@@ -7,6 +7,10 @@ export default function AdminsPage() {
   const [admins, setAdmins] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("ADMIN");
+
   async function getAdmins() {
     const { data, error } = await supabase
       .from("admins")
@@ -20,6 +24,33 @@ export default function AdminsPage() {
 
     setAdmins(data || []);
     setLoading(false);
+  }
+
+  async function createAdmin() {
+    if (!name || !email) {
+      alert("Please fill in name and email");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("admins")
+      .insert({
+        name,
+        email,
+        role,
+        active: true,
+      });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setName("");
+    setEmail("");
+    setRole("ADMIN");
+
+    getAdmins();
   }
 
   async function deleteAdmin(id: string) {
@@ -64,6 +95,51 @@ export default function AdminsPage() {
           Admin Management
         </h1>
 
+        {/* Create Admin */}
+        <div className="bg-white rounded-3xl shadow p-8 mb-8">
+
+          <h2 className="text-2xl font-black text-gray-900 mb-5">
+            Create New Admin
+          </h2>
+
+          <div className="grid md:grid-cols-3 gap-4">
+
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Admin name"
+              className="border-2 border-gray-300 rounded-xl p-3 text-gray-900"
+            />
+
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Admin email"
+              className="border-2 border-gray-300 rounded-xl p-3 text-gray-900"
+            />
+
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="border-2 border-gray-300 rounded-xl p-3 text-gray-900"
+            >
+              <option value="ADMIN">ADMIN</option>
+              <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+            </select>
+
+          </div>
+
+          <button
+            onClick={createAdmin}
+            className="mt-5 bg-blue-700 text-white px-6 py-3 rounded-xl font-bold"
+          >
+            Create Admin
+          </button>
+
+        </div>
+
+
+        {/* Admin List */}
         <div className="bg-white rounded-3xl shadow p-8">
 
           {admins.length === 0 ? (
