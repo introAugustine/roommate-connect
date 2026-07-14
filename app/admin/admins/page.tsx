@@ -27,37 +27,44 @@ export default function AdminsPage() {
   }
 
   async function createAdmin() {
+    alert("Button clicked");
+
     if (!name || !email) {
       alert("Please fill in name and email");
       return;
     }
 
-    const response = await fetch("/api/admins/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        role,
-      }),
-    });
+    try {
+      const response = await fetch("/api/admins/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          role,
+        }),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (!response.ok) {
-      alert(result.error);
-      return;
+      if (!response.ok) {
+        alert(result.error || "Something went wrong");
+        return;
+      }
+
+      alert("Admin created successfully");
+
+      setName("");
+      setEmail("");
+      setRole("ADMIN");
+
+      getAdmins();
+
+    } catch (error: any) {
+      alert(error.message);
     }
-
-    alert("Admin created successfully");
-
-    setName("");
-    setEmail("");
-    setRole("ADMIN");
-
-    getAdmins();
   }
 
   async function deleteAdmin(id: string) {
@@ -179,7 +186,6 @@ export default function AdminsPage() {
                       {new Date(admin.created_at).toLocaleString()}
                     </p>
                   </div>
-
 
                   {admin.role !== "SUPER_ADMIN" && (
                     <button
