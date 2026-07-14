@@ -65,18 +65,13 @@ export default function AdminsPage() {
       setRole("ADMIN");
 
       getAdmins();
-
     } catch (error: any) {
       alert(error.message);
     }
   }
 
   async function deleteAdmin(id: string) {
-    const confirmDelete = confirm(
-      "Are you sure you want to remove this admin?"
-    );
-
-    if (!confirmDelete) return;
+    if (!confirm("Are you sure you want to remove this admin?")) return;
 
     const { error } = await supabase
       .from("admins")
@@ -94,12 +89,16 @@ export default function AdminsPage() {
   useEffect(() => {
     const session = localStorage.getItem("roommateAdminSession");
 
+    alert(session);
+
     if (!session) {
       router.push("/admin/login");
       return;
     }
 
     const adminSession = JSON.parse(session);
+
+    alert(JSON.stringify(adminSession, null, 2));
 
     if (adminSession.role !== "SUPER_ADMIN") {
       alert("You do not have permission to access this page.");
@@ -108,7 +107,6 @@ export default function AdminsPage() {
     }
 
     getAdmins();
-
   }, []);
 
   if (loading) {
@@ -179,7 +177,6 @@ export default function AdminsPage() {
 
         </div>
 
-
         <div className="bg-white rounded-3xl shadow p-8">
 
           {admins.length === 0 ? (
@@ -187,7 +184,6 @@ export default function AdminsPage() {
               No admins found.
             </p>
           ) : (
-
             <div className="space-y-5">
 
               {admins.map((admin) => (
@@ -195,7 +191,6 @@ export default function AdminsPage() {
                   key={admin.id}
                   className="border rounded-2xl p-6 flex justify-between items-center"
                 >
-
                   <div>
                     <h2 className="text-xl font-black text-gray-900">
                       {admin.name}
@@ -210,11 +205,9 @@ export default function AdminsPage() {
                     </span>
 
                     <p className="text-sm text-gray-500 mt-2">
-                      Created:{" "}
-                      {new Date(admin.created_at).toLocaleString()}
+                      Created: {new Date(admin.created_at).toLocaleString()}
                     </p>
                   </div>
-
 
                   {admin.role !== "SUPER_ADMIN" && (
                     <button
@@ -224,12 +217,10 @@ export default function AdminsPage() {
                       Remove
                     </button>
                   )}
-
                 </div>
               ))}
 
             </div>
-
           )}
 
         </div>
