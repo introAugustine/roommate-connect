@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 export default function AdminsPage() {
+  const router = useRouter();
+
   const [admins, setAdmins] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,8 +31,6 @@ export default function AdminsPage() {
   }
 
   async function createAdmin() {
-    alert("Button clicked");
-
     if (!name || !email || !password) {
       alert("Please fill in name, email and password");
       return;
@@ -91,7 +92,23 @@ export default function AdminsPage() {
   }
 
   useEffect(() => {
+    const session = localStorage.getItem("roommateAdminSession");
+
+    if (!session) {
+      router.push("/admin/login");
+      return;
+    }
+
+    const adminSession = JSON.parse(session);
+
+    if (adminSession.role !== "SUPER_ADMIN") {
+      alert("You do not have permission to access this page.");
+      router.push("/admin");
+      return;
+    }
+
     getAdmins();
+
   }, []);
 
   if (loading) {
@@ -162,6 +179,7 @@ export default function AdminsPage() {
 
         </div>
 
+
         <div className="bg-white rounded-3xl shadow p-8">
 
           {admins.length === 0 ? (
@@ -196,6 +214,7 @@ export default function AdminsPage() {
                       {new Date(admin.created_at).toLocaleString()}
                     </p>
                   </div>
+
 
                   {admin.role !== "SUPER_ADMIN" && (
                     <button
