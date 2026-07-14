@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import StatsCards from "./components/StatsCards";
 
@@ -109,21 +110,34 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto">
 
         {/* Title and Logout Bar */}  
-        <div className="flex justify-between items-center mb-8">  
-          <h1 className="text-4xl font-black text-blue-700">  
-            Roommate Connect Admin  
-          </h1>  
+        <div className="flex justify-between items-center mb-8">
 
-          <button  
-            onClick={() => {  
-              localStorage.removeItem("roommateAdminSession");  
-              router.push("/admin/login");  
-            }}  
-            className="bg-red-600 text-white px-5 py-3 rounded-xl font-bold"  
-          >  
-            Logout  
-          </button>  
-        </div>  
+          <h1 className="text-4xl font-black text-blue-700">
+            Roommate Connect Admin
+          </h1>
+
+          <div className="flex gap-3">
+
+            <Link
+              href="/admin/admins"
+              className="bg-blue-700 text-white px-5 py-3 rounded-xl font-bold"
+            >
+              Manage Admins
+            </Link>
+
+            <button
+              onClick={() => {
+                localStorage.removeItem("roommateAdminSession");
+                router.push("/admin/login");
+              }}
+              className="bg-red-600 text-white px-5 py-3 rounded-xl font-bold"
+            >
+              Logout
+            </button>
+
+          </div>
+
+        </div>
 
         {/* Stats Section with Spacing */}  
         <div className="mb-8">  
